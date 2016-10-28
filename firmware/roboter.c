@@ -7,7 +7,7 @@ task main()
 {
 	while(true) {
 		RefreshColor();
-		nxtDisplayBigTextLine(1, "L: %d", LeftColor;
+		nxtDisplayBigTextLine(1, "L: %d", LeftColor);
 		nxtDisplayBigTextLine(3, "M: %d", MiddleColor);
 		nxtDisplayBigTextLine(5, "R: %d", RightColor);
 
