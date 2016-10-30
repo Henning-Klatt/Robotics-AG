@@ -14,14 +14,14 @@ void RefreshColor()
 	(HTCS2readRGB(colorSensorLeft, Leftred, Leftgreen, Leftblue)); //Linker RGB Sensor auslesen
 	(HTCS2readRGB(colorSensorRight, Rightred, Rightgreen, Rightblue)); //Rechter RGB Sensor auslesen
 
-	if(Leftred < 100) LeftLine = 1; //Wenn ROT Links schwarz
-	else LeftColor = 0; //Ansonste weiss
+	if(Leftred < 100) LeftLine = COLOR_BLACK; //Wenn ROT Links schwarz
+	else LeftColor = COLOR_WHITE; //Ansonste weiss
 
-	if(Rightred < 100) RightLine = 1; //Wenn ROT Rechts schwarz
-	else RightColor = 0; //Ansonsten weiss
+	if(Rightred < 100) RightLine = COLOR_BLACK; //Wenn ROT Rechts schwarz
+	else RightColor = COLOR_WHITE; //Ansonsten weiss
 
 
-	if(SensorValue(colorSensorMiddle) <= 50) MiddleLine = 0; //Macht keinen Sinn...
-	else MiddleColor = 0;
+	if(SensorValue(colorSensorMiddle) <= 50) MiddleLine = COLOR_BLACK;
+	else MiddleColor = COLOR_WHITE;
 
 }
