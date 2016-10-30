@@ -12,7 +12,7 @@ task main()
 		nxtDisplayBigTextLine(5, "R: %d", RightColor);
 
 
-		if(MiddleLine == 1){
+		if(MiddleLine == COLOR_BLACK){
 			//Vorwaerts
 			motor [ left ] = 100;
 			motor [ right ] = 100;
