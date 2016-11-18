@@ -1,6 +1,10 @@
-int LeftColor, MiddleColor, RightColor; // 0 für schwarz; 1 für weiss; (später 2 für grün
+#ifndef VARIABLEN_H_
+#define VARIABLEN_H_
 
-//Makros für Farbwerte
 #define COLOR_BLACK 0
 #define COLOR_WHITE 1
 #define COLOR_GREEN 2
+
+int LeftLine, RightLine, MiddleLine;
+
+#endif
