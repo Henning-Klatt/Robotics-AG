@@ -35,25 +35,43 @@ void RefreshColor()
 void FollowLine(const int speed)
 {
 	//____________By_Markus_Manz_____________//
-	if(MiddleLine == COLOR_BLACK || RightLine == COLOR_WHITE || LeftLine == COLOR_WHITE){
-		move(speed, speed);
+	if(MiddleLine == COLOR_BLACK && RightLine == COLOR_WHITE && LeftLine == COLOR_WHITE){
+		move(speed, speed, 0, 0);
 	}
 
-	if(LeftLine == COLOR_BLACK || MiddleLine != COLOR_BLACK){
-		move(0, speed);
+	if(LeftLine == COLOR_BLACK && MiddleLine != COLOR_BLACK){
+		move(speed, -(speed), 50, 0);
 	}
 
-	if(RightLine == COLOR_BLACK || MiddleLine != COLOR_BLACK){
-		move(speed, 0);
+	if(RightLine == COLOR_BLACK && MiddleLine != COLOR_BLACK){
+		move(-(speed), speed, 50, 0);
 	}
-	
-	
+
+
 	//________NICHT MEHR BY Markus_Manz___________//
-	if(RightLine == COLOR_BLACK || MiddleLine == COLOR_BLACK) {
-		move(speed, -10);
+	if(RightLine == COLOR_BLACK && MiddleLine == COLOR_BLACK) {
+		move(50, 50, 250, 0); //By Markus Manz
+		if(RightLine == COLOR_WHITE && MiddleLine == COLOR_BLACK) move(50, 50,50,0);
+		else {
+			move(-speed, speed, 250, 0);
+			move(-speed, -speed, 130, 0); //Try that!!!!!!
+	}
 	}
 
-	if(LeftLine == COLOR_BLACK || MiddleLine == COLOR_BLACK) {
-		move(-10, speed);
+	if(LeftLine == COLOR_BLACK && MiddleLine == COLOR_BLACK) {
+		move(50, 50, 130, 0); //By Markus Manz
+		if(RightLine == COLOR_WHITE && MiddleLine == COLOR_BLACK) move(50, 50, 50, 0);
+		else {
+			move(speed, -speed, 150, 0);
+			move(-speed, -speed, 130, 0);
+		}
+	}
+
+	if(LeftLine == COLOR_BLACK && RightLine == COLOR_BLACK && MiddleLine == COLOR_BLACK){
+		move(-speed, -speed, 100, 0);
+	}
+
+	if(LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && MiddleLine == COLOR_WHITE) {
+		move(speed, speed, 0, 0);
 	}
 }
