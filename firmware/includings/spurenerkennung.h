@@ -63,10 +63,8 @@ void FollowLine(const int speed)
 		move(speed, speed, 80, 0);
 		RefreshColor();
 		
-		count = 0;
-		while(LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100){
+		for(int count = 0, LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100, count++){
 			move(-speed*2, speed*2, 1, 0.1);
-			count++;
 			RefreshColor();
 		}
 	}
@@ -75,10 +73,8 @@ void FollowLine(const int speed)
 		move(speed, speed, 80, 0);
 		RefreshColor();
 		
-		count = 0;
-		while(LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100){
+		for(int count = 0, LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100, count++){
 			move(speed*2, -speed*2, 1, 0.1);
-			count++;
 			RefreshColor();
 		}
 	}
