@@ -2,4 +2,4 @@
 #define COLOR_WHITE 1
 #define COLOR_GREEN 2
 
-int LeftLine, RightLine, MiddleLine, count;
+int LeftLine, RightLine, MiddleLine;
