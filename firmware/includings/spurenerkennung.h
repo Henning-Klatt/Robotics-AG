@@ -1,51 +1,53 @@
-#pragma config(Sensor, S1,     colorSensorLeft, sensorI2CCustom)
-#pragma config(Sensor, S2,     colorSensorMiddle, sensorLightActive)
-#pragma config(Sensor, S3,     colorSensorRight, sensorI2CCustom)
-
-#include "drivers/hitechnic-colour-v2.h"
-#include "includings/variablen.h"
 #include "includings/move.h"
 
-int Leftred, Leftgreen, Leftblue; //RGB Werte Sensor Links
-int Rightred, Rightgreen, Rightblue; //RGB Werte Sensor rechts
 
-void RefreshColor()
-{
-	HTCS2readRGB(colorSensorLeft, Leftred, Leftgreen, Leftblue); //Linker RGB Sensor auslesen
-	HTCS2readRGB(colorSensorRight, Rightred, Rightgreen, Rightblue); //Rechter RGB Sensor auslesen
+void FindLine(const int speed);
+void FollowLine(const int speed);
+void rotate (const int speed, const int direction);
 
-	if(Leftred < 100) LeftLine = COLOR_BLACK; //Wenn ROT Links Spur vorhanden
-	else LeftLine = COLOR_WHITE; //Ansonsten keine Spur
+void rotate (const int speed, const int direction) {
+		move(speed, speed, 80, 0);
+		RefreshColor();
 
-	if(Rightred < 100) RightLine = COLOR_BLACK; //Wenn ROT Rechts Spur vorhanden
-	else RightLine = COLOR_WHITE; //Ansonsten keine Spur
+		if (direction == RIGHT) {
+			for(int count = 0; LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100; count++) {
+				move(-speed*2, speed*2, 1, 0.1);
+				RefreshColor();
+			}
+		} else if (direction == LEFT) {
+				for(int count = 0; LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100; count++){
+				move(speed*2, -speed*2, 1, 0.1);
+				RefreshColor();
+			}
+		}
+	}
 
-
-	if(SensorValue(colorSensorMiddle) <= 50) MiddleLine = COLOR_BLACK;
-	else MiddleLine = COLOR_WHITE;
-
-	nxtDisplayBigTextLine(1, "%d", LeftLine);
-	nxtDisplayBigTextLine(3, "%d", MiddleLine);
-	nxtDisplayBigTextLine(5, "%d", RightLine);
-}
 
 void FindLine(const int speed){
-	//Rampe hoch
-	if(RightLine == COLOR_BLACK || MiddleLine == COLOR_BLACK || LeftLine == COLOR_BLACK){
-		move(speed, speed, 0, 0.1);
-	}
-	else if(RightLine == COLOR_WHITE || MiddleLine == COLOR_WHITE || LeftLine == COLOR_WHITE){
-		move(-speed, speed, 0, 0.1);
-	}
-	else{
-		return;
+	while(true) {
+		for(int step = 0; LeftLine != COLOR_BLACK && MiddleLine != COLOR_BLACK && RightLine != COLOR_BLACK && step < 50; step++) {
+			move(speed, speed, 1, 0);
+			RefreshColor();
+		}
+		for(int step = 0; LeftLine != COLOR_BLACK && MiddleLine != COLOR_BLACK && RightLine != COLOR_BLACK && step < 450; step++) {
+			if(step <= 90){
+				move(-speed, speed, 1, 0);
+			}
+			else if(step < 270){
+				move(speed, -speed, 1,0);
+			}
+			else if(step >= 360){
+				move(-speed, speed, 1, 0);
+			}
+		}
+		break;
 	}
 }
 
 
 void FollowLine(const int speed)
 {
-	//____________By_Markus_Manz_____________//
+	/*----------------------------------------------------------------------------------------------------------------*/
 	if(RightLine == COLOR_WHITE && MiddleLine == COLOR_BLACK && LeftLine == COLOR_WHITE){
 		move(speed, speed, 0, 0);
 	}
@@ -57,34 +59,37 @@ void FollowLine(const int speed)
 	if(RightLine == COLOR_BLACK && MiddleLine == COLOR_WHITE){
 		move(-(speed), speed, 50, 0);
 	}
-	//________NICHT MEHR BY Markus_Manz___________//
-	
+	/*----------------------------------------------------------------------------------------------------------------*/
+
 	if(RightLine == COLOR_BLACK && MiddleLine == COLOR_BLACK && LeftLine == COLOR_WHITE) {
-		move(speed, speed, 80, 0);
-		RefreshColor();
-		
-		for(int count = 0, LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100, count++){
-			move(-speed*2, speed*2, 1, 0.1);
-			RefreshColor();
-		}
+		rotate(speed, RIGHT);
 	}
 
 	if(LeftLine == COLOR_BLACK && MiddleLine == COLOR_BLACK && RightLine == COLOR_WHITE) {
-		move(speed, speed, 80, 0);
-		RefreshColor();
-		
-		for(int count = 0, LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && count < 100, count++){
-			move(speed*2, -speed*2, 1, 0.1);
-			RefreshColor();
-		}
+		rotate(speed, LEFT);
+	}
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	if(RightLine == COLOR_GREEN) {
+		move(speed, speed, 20, 0);
+		rotate(speed, RIGHT);
 	}
 
+	if(LeftLine == COLOR_GREEN) {
+		move(speed, speed, 20, 0);
+		rotate(speed, LEFT);
+	}
+	/*----------------------------------------------------------------------------------------------------------------*/
 
 	if(LeftLine == COLOR_BLACK && RightLine == COLOR_BLACK && MiddleLine == COLOR_BLACK){
-		FindLine(speed);
+		move(speed, speed, 1, 0);
 	}
 
 	if(LeftLine == COLOR_WHITE && RightLine == COLOR_WHITE && MiddleLine == COLOR_WHITE) {
 		FindLine(speed);
+	}
+
+	if(LeftLine == COLOR_BLACK && MiddleLine == COLOR_WHITE && RightLine == COLOR_BLACK) {
+		move(speed, speed, 1, 0);
 	}
 }
