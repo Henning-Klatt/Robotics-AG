@@ -9,9 +9,9 @@
 #include "includings/spurenerkennung.h"
 #include "includings/variablen.h"
 
-task main()
-{
-	while(true) {
+
+task main(){
+	while(true){
 		RefreshColor();
 		//max 50
 		FollowLine(30);

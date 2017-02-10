@@ -4,7 +4,7 @@
 void RefreshColor()
 {
 	int Leftred, Leftgreen, Leftblue; //RGB Werte Sensor Links
-	int Rightred, Rightgreen, Rightblue; //RGB Werte Sensor rechts	
+	int Rightred, Rightgreen, Rightblue; //RGB Werte Sensor rechts
 
 	HTCS2readRGB(colorSensorLeft, Leftred, Leftgreen, Leftblue); //Linker RGB Sensor auslesen
 	HTCS2readRGB(colorSensorRight, Rightred, Rightgreen, Rightblue); //Rechter RGB Sensor auslesen

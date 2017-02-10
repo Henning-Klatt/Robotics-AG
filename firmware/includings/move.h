@@ -1,5 +1,6 @@
 void move(int motorl,int motorr,int step,int time)
 {
+	//step *= 3;
 	if(step != 0)
 	{
 		if(abs(motorl) > abs(motorr))

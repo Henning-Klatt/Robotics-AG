@@ -2,7 +2,6 @@
 #define COLOR_WHITE 1
 #define COLOR_GREEN 2
 
-
 #define RIGHT 0
 #define LEFT 1
 
