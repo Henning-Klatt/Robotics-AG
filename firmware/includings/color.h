@@ -8,8 +8,6 @@ void RefreshColor()
 
 	HTCS2readRGB(colorSensorLeft, Leftred, Leftgreen, Leftblue); //Linker RGB Sensor auslesen
 	HTCS2readRGB(colorSensorRight, Rightred, Rightgreen, Rightblue); //Rechter RGB Sensor auslesen
-	int colorl = HTCS2readColor(colorSensorLeft);
-	int colorr = HTCS2readColor(colorSensorRight);
 
 	if (HTCS2readColor(colorSensorLeft) == 4) LeftLine = COLOR_GREEN;
 	else if(Leftred < 100) LeftLine = COLOR_BLACK; //Wenn ROT Links Spur vorhanden
