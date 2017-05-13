@@ -1,0 +1,30 @@
+MISC
+------------------------------------------------------------------------------------
+BrickPiSetup() #Setup everything
+
+BrickPiSetupSensors() #Sensor setup
+
+BrickPiUpdateValues() #Push values like motor speed to brickpi
+
+
+Motor Control
+------------------------------------------------------------------------------------
+BrickPi.MotorEnable[PORT_X] = 1 #Enable Motor on port x
+
+BrickPi.MotorSpeed[PORT_X] = pwr #Set speed to pwr # min = 0; max = 255
+
+motorRotateDegree([power],[deg],[port],sample,delay) 
+    """Rotate the selected motors by specified degre
+    Args:
+      power    : an array of the power values at which to rotate the motors (0-255)
+      deg    : an array of the angle's (in degrees) by which to rotate each of the motor (can be negative)
+      port    : an array of the port's on which the motor is connected
+      sampling_time  : (optional) the rate(in seconds) at which to read the data in the encoders
+    delay_when_stopping:        (optional) the delay (in seconds) for which the motors are run in the opposite direction before stopping
+    Returns:
+      0 on success
+    Usage:
+      Pass the arguments in a list. if a single motor has to be controlled then the arguments should be
+      passed like elements of an array,e.g, motorRotateDegree([255],[360],[PORT_A]) or
+      motorRotateDegree([255,255],[360,360],[PORT_A,PORT_B])
+    """
