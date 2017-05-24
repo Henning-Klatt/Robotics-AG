@@ -19,13 +19,13 @@ class Robot(object):
         self.speedl = 0
         self.speedr = 0
         self.colors = [0]*8 # Contains color Values
-        self.colorsCalibrate = [0]*8 # Contains treshold
+        self.colorsCalibrate = [150]*8 # Contains treshold, modified by Robot.Calibrate
 
         # Setup
         #-------------------------------
         # Open SPI bus
-        spi = spidev.SpiDev()
-        spi.open(0, 0)
+        self.spi = spidev.SpiDev()
+        self.spi.open(0, 0)
 
         BrickPiSetup()
         BrickPi.MotorEnable[self.motorr] = 1
@@ -59,6 +59,13 @@ class Robot(object):
         motorRotateDegree(power, deg, [self.motorl, self.motorr], self.sample, .01)
 
 
+    def sensorbar(self, channel=0):
+        """ Update self.colors and return value of one specified sensor (not neccessary)."""
+        data = self._readChannel()
+        #If data is bigger than the threshold (==Black) put True (aka. 1) in the list
+        self.colors = [ v > t for (v,t) in zip(data, self.colorsCalibrate) ]
+        return self.colors[channel]
+
     def _thread(self):
         """ Makes motors run for longer timespans.
         TODO: Research Threading class (and use it instead of this) """
@@ -68,14 +75,14 @@ class Robot(object):
             if self.speedr != -1:
                 BrickPi.MotorSpeed[self.motorr] = self.speedr
 
-                BrickPiUpdateValues()
+            BrickPiUpdateValues()
 
 
-    def ReadChannel(self):
+    def _readChannel(self):
         """ Function to read SPI data from MCP3008 chip """
         data = [0]*8
         for i in range(8):
-            adc = spi.xfer2([1, (8+i)<<4, 0])
+            adc = self.spi.xfer2([1, (8+i)<<4, 0])
             data[i] = ((adc[1]&3) << 8) + adc[2]
         return data
 

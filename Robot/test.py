@@ -4,5 +4,5 @@ import time
 rob = Robot()
 
 while True:
-    print(rob.ReadChannel())
+    print(rob.sensorbar(1))
     time.sleep(1)
