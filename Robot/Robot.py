@@ -27,6 +27,7 @@ class Robot(object):
         self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
 
+        # Confiugre BrickPi
         BrickPiSetup()
         BrickPi.MotorEnable[self.motorr] = 1
         BrickPi.MotorEnable[self.motorl] = 1
@@ -63,7 +64,7 @@ class Robot(object):
         """ Update self.colors and return value of one specified sensor (not neccessary)."""
         data = self._readChannel()
         #If data is bigger than the threshold (==Black) put True (aka. 1) in the list
-        self.colors = [ v > t for (v,t) in zip(data, self.colorsCalibrate) ]
+        self.colors = [ int(v > t) for (v,t) in zip(data, self.colorsCalibrate) ]
         return self.colors[channel]
 
     def _thread(self):
