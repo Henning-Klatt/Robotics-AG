@@ -1,4 +1,4 @@
-from Brick import *
+from BrickPi import *
 import time
 BrickPiSetup()
 BrickPi.MotorEnable[PORT_A] = 1

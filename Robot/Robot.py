@@ -1,8 +1,9 @@
+#!/usr/bin/python3
 """ Everything needed to control the robot.  """
 from threading import Thread
 import spidev
 import os
-from Brick import *
+from BrickPi import *
 
 class Robot(object):
     """ All methods needed to control the robot """
