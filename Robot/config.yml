@@ -4,4 +4,4 @@ robot:
     motorl: 0 # Port_A
     motorr: 1 # Port_B
 
-    sample: 0.01
+    sample: 0

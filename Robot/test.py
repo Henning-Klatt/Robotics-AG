@@ -3,6 +3,9 @@ import time
 
 rob = Robot()
 
-while True:
-    print(rob.sensorbar(1))
-    time.sleep(1)
+rob.motor('lr', 150)
+time.sleep(1)
+print("Stop")
+rob.motor('lr', -1)
+time.sleep(5)
+# rob.motorRotateDegree([100,100],[-50,-50])

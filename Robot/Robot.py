@@ -42,12 +42,12 @@ class Robot(object):
     def motor(self, motor, speed):
         """ Set abs(speed) of a motor ('l' or 'r') while driving """
         if motor == 'l':
-            self.speedl = abs(speed)
+            self.speedl = speed
         elif motor == 'r':
-            self.speedr = abs(speed)
+            self.speedr = speed
         elif motor == 'lr' or motor == 'rl':
-            self.speedr = abs(speed)
-            self.speedl = abs(speed)
+            self.speedr = speed
+            self.speedl = speed
         else:
             raise ValueError('Robot.motor(x, y) cant take this x argument')
 
@@ -72,11 +72,12 @@ class Robot(object):
         TODO: Research Threading class (and use it instead of this) """
         while True:
             if self.speedl != -1:
-                BrickPi.MotorSpeed[self.motorl] = self.speedl
+                BrickPi.MotorSpeed[self.motorl] = -self.speedl
             if self.speedr != -1:
-                BrickPi.MotorSpeed[self.motorr] = self.speedr
+                BrickPi.MotorSpeed[self.motorr] = -self.speedr
 
             BrickPiUpdateValues()
+            time.sleep(self.sample)
 
 
     def _readChannel(self):
