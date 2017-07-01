@@ -13,6 +13,9 @@ class Debug:
         self.window.clear()
         self.window.refresh()
 
+    def clear(self):
+        self.window.clear()
+        self.window.refresh()
 
     def stop(self):
         curses.echo()
@@ -22,8 +25,13 @@ class Debug:
 
 if __name__ == "__main__":
     deb = Debug()
+    rob = Robot()
     x = 0
-    while x != ord('b'):
+    while x != ord('q'):
         x = deb.window.getch()
+        rob.sensorbar()
+        data = rob.colors
+        deb.window.move(0, 0)
+        deb.addstr(str(data))
     time.sleep(5)
     deb.stop()

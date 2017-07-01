@@ -6,6 +6,12 @@ import spidev
 import os
 from BrickPi import *
 
+global BLACK
+global WHITE
+
+BLACK = 1
+WHITE = 0
+
 class Robot(object):
     """ All methods needed to control the robot """
     def __init__(self):
@@ -53,7 +59,7 @@ class Robot(object):
 
 
     def motorRotateDegree(self, power, deg):
-        """ Frontend to Brick.MotorRotateDegree 
+        """ Frontend to Brick.MotorRotateDegree
         TODO: Look into threadsafe version of the library and maybe rewrite mRD() to use it"""
         self.speedl = -1
         self.speedr = -1

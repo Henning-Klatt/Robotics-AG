@@ -1,3 +1,6 @@
+from BrickPi import *
+
+
 MISC
 ------------------------------------------------------------------------------------
 BrickPiSetup() #Setup everything
