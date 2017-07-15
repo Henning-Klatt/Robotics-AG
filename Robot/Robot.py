@@ -4,7 +4,7 @@ from threading import Thread
 import yaml
 import spidev
 import os
-from BrickPi import *
+from BrickPiM import BrickPi
 
 global BLACK
 global WHITE
@@ -22,8 +22,6 @@ class Robot(object):
             setattr(self, section, cfg['robot'][section])
 
         # Init vars for values
-        self.speedl = 0
-        self.speedr = 0
         self.colors = [0]*8 # Contains color Values
         self.colorsCalibrate = [150]*8 # Contains treshold, modified by Robot.Calibrate
 
@@ -33,37 +31,8 @@ class Robot(object):
         self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
 
-        # Confiugre BrickPi
-        BrickPiSetup()
-        BrickPi.MotorEnable[self.motorr] = 1
-        BrickPi.MotorEnable[self.motorl] = 1
-        BrickPiUpdateValues()
-
-        # Thread start
-        self.motorThread = Thread(target=self._thread, args=())
-        self.motorThread.setDaemon(1)
-        self.motorThread.start()
-
-
-    def motor(self, motor, speed):
-        """ Set abs(speed) of a motor ('l' or 'r') while driving """
-        if motor == 'l':
-            self.speedl = speed
-        elif motor == 'r':
-            self.speedr = speed
-        elif motor == 'lr' or motor == 'rl':
-            self.speedr = speed
-            self.speedl = speed
-        else:
-            raise ValueError('Robot.motor(x, y) cant take this x argument')
-
-
-    def motorRotateDegree(self, power, deg):
-        """ Frontend to Brick.MotorRotateDegree
-        TODO: Look into threadsafe version of the library and maybe rewrite mRD() to use it"""
-        self.speedl = -1
-        self.speedr = -1
-        motorRotateDegree(power, deg, [self.motorl, self.motorr], self.sample, .01)
+        # BrickPi
+        self.brick = BrickPi()
 
 
     def sensorbar(self, channel=0):
@@ -73,18 +42,24 @@ class Robot(object):
         self.colors = [ int(v > t) for (v,t) in zip(data, self.colorsCalibrate) ]
         return self.colors[channel]
 
-    def _thread(self):
-        """ Makes motors run for longer timespans.
-        TODO: Research Threading class (and use it instead of this) """
-        while True:
-            if self.speedl != -1:
-                BrickPi.MotorSpeed[self.motorl] = -self.speedl
-            if self.speedr != -1:
-                BrickPi.MotorSpeed[self.motorr] = -self.speedr
 
-            BrickPiUpdateValues()
-            time.sleep(self.sample)
+    def motor(self, direct, speed):
+        neg = speed < 0
 
+        if direct == 'l':
+            m = self.motorl
+        elif direct == 'r':
+            m = self.motorr
+        else:
+            m = self.motorr
+            self.motor('l', speed)
+
+        if neg:
+            self.brick.updateDirection(m, 0)
+        else:
+            self.brick.updateDirection(m, 1)
+
+        self.brick.updateSpeed(m, abs(speed))
 
     def _readChannel(self):
         """ Function to read SPI data from MCP3008 chip """
@@ -92,5 +67,4 @@ class Robot(object):
         for i in range(8):
             adc = self.spi.xfer2([1, (8+i)<<4, 0])
             data[i] = ((adc[1]&3) << 8) + adc[2]
-        return data
-
+        return data 
