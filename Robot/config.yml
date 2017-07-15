@@ -1,7 +1,7 @@
 robot:
     baseSpeed: 75
     
-    motorl: 2 # Port_C
+    motorl: 0 # Port_C
     motorr: 1 # Port_B
 
     sample: 0
