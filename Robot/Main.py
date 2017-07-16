@@ -1,36 +1,37 @@
+#!/usr/bin/python3
 from Robot import *
-
+from debug import *
+from time import sleep
 rob = Robot()
+debug = Debug()
 
 def followline():
     """ Follow the line """
     rob.sensorbar()
 
-    if (rob.colors[3], rob.colors[4]) == (BLACK, BLACK):
-        rob.motor('lr', rob.baseSpeed)
+    #rob.colors = reversed(rob.colors)
 
-    elif not rob.colors[4]: # Rob to far left
-        rob.motor('l', int(rob.baseSpeed * 1.5))
-        if not rob.colors[3]: # Rob farer left
-            rob.motor('r', int(rob.baseSpeed * .5))
-        if not rob.colors[2]:
-            rob.motor('l', int(rob.baseSpeed * 2))
-        if not rob.colors[1]:
-            rob.motor('r', int(rob.baseSpeed * 0))
-        if not rob.colors[0]:
-            rob.motor('l', int(rob.baseSpeed * 3))
+    if rob.colors[3] == BLACK or rob.colors[4] == BLACK:
+        rob.motor('l', rob.baseSpeed)
+        rob.motor('r', rob.baseSpeed)
+    elif BLACK in rob.colors[5:7] and not (BLACK in rob.colors[0:3]): # Line left
+        rob.motor('r', 0)
+    elif BLACK in rob.colors[0:2] and not (BLACK in rob.colors[4:7]): # Line right
+        rob.motor('l',0)
 
-    elif not rob.colors[3]: # Rob to far right
-        rob.motor('r', int(rob.baseSpeed * 1.5))
-        if not rob.colors[4]: # Rob farer right
-            rob.motor('l', int(rob.baseSpeed * .5))
-        if not rob.colors[5]:
-            rob.motor('r', int(rob.baseSpeed * 2))
-        if not rob.colors[6]:
-            rob.motor('l', int(rob.baseSpeed * 0))
-        if not rob.colors[7]:
-            rob.motor('r', int(rob.baseSpeed * 3))
+def printc():
+    rob.sensorbar()
+    print(rob.colors)
+
 
 if __name__ == "__main__":
-    while True:
-        followline()
+    try:
+        while True:
+            followline()
+            #debug.log()
+
+    except KeyboardInterrupt:
+        rob.motor('r', 0)
+        rob.motor('l', 0)
+        debug.clear()
+        print("Beende Hauptprogramm, um Debug zu beenden drücke Q")

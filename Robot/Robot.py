@@ -44,8 +44,6 @@ class Robot(object):
 
 
     def motor(self, direct, speed):
-        neg = speed < 0
-
         if direct == 'l':
             m = self.motorl
         elif direct == 'r':
@@ -54,12 +52,12 @@ class Robot(object):
             m = self.motorr
             self.motor('l', speed)
 
-        if neg:
+        if speed < 0:
             self.brick.updateDirection(m, 0)
         else:
             self.brick.updateDirection(m, 1)
 
-        self.brick.updateSpeed(m, abs(speed))
+        self.brick.updateSpeed(m, abs(int(speed)))
 
     def _readChannel(self):
         """ Function to read SPI data from MCP3008 chip """
