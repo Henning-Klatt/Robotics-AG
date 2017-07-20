@@ -87,18 +87,23 @@ class Debug(object):
                 if event == ord("w"):
                     self.box2.addstr(3, 2, "      ")
                     self.box2.addstr(3, 2, "Vor")
-                    self.rob.motor('l', self.rob.baseSpeed)
-                    self.rob.motor('r', self.rob.baseSpeed)
+                    self.rob.motor('l', rob.baseSpeed)
+                    self.rob.motor('r', rob.baseSpeed)
                     #self.log("w")
                 if event == ord("s"):
                     self.box2.addstr(3, 2, "      ")
                     self.box2.addstr(3, 2, "Zurück")
+                    self.rob.motor('lr', -rob.baseSpeed)
                 if event == ord("a"):
                     self.box2.addstr(3, 2, "      ")
                     self.box2.addstr(3, 2, "Links")
+                    self.rob.motor('l', 0)
+                    self.rob.motor('r', rob.baseSpeed)
                 if event == ord("d"):
                     self.box2.addstr(3, 2, "      ")
                     self.box2.addstr(3, 2, "Rechts")
+                    self.rob.motor('l', rob.baseSpeed)
+                    self.rob.motor('r', 0)
                 if event == ord(" "):
                     self.box2.addstr(3, 2, "      ")
                     self.box2.addstr(3, 2, "Stop")
