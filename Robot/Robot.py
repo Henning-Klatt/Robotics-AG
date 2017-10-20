@@ -8,7 +8,9 @@ from BrickPiM import BrickPi
 
 global BLACK
 global WHITE
+global GREEN
 
+GREEN = 2
 BLACK = 1
 WHITE = 0
 
@@ -43,14 +45,14 @@ class Robot(object):
         return self.colors[channel]
 
 
-    def motor(self, direct, speed):
+    def motor(self, direct, speed, steps=-1, blocking=True):
         if direct == 'l':
             m = self.motorl
         elif direct == 'r':
             m = self.motorr
         else:
             m = self.motorr
-            self.motor('l', speed)
+            self.motor('l', speed, steps, blocking=False)
 
         if speed < 0:
             self.brick.updateDirection(m, 0)
@@ -58,6 +60,13 @@ class Robot(object):
             self.brick.updateDirection(m, 1)
 
         self.brick.updateSpeed(m, abs(int(speed)))
+
+        if steps != -1:
+            self.brick.moveSteps(m, steps, blocking)
+
+    def close(self):
+        self.spi.close()
+        self.brick.stop()
 
     def _readChannel(self):
         """ Function to read SPI data from MCP3008 chip """

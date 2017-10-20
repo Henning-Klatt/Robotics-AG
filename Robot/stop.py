@@ -1,4 +1,5 @@
 from Robot import *
 
 r = Robot()
-r.motot("lr", 0)
+r.motor("l", 0)
+r.motor("r", 0)
