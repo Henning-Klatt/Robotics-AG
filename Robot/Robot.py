@@ -16,7 +16,7 @@ WHITE = 0
 
 class Robot(object):
     """ All methods needed to control the robot """
-    def __init__(self):
+    def __init__(self, unsafe=False):
         # Load configuration file
         with open("config.yml", 'r') as ymlfile: # Load Configuration into Dict
                 cfg = yaml.load(ymlfile)
@@ -34,7 +34,7 @@ class Robot(object):
         self.spi.open(0, 0)
 
         # BrickPi
-        self.brick = BrickPi()
+        self.brick = BrickPi(unsafe=unsafe)
 
 
     def sensorbar(self, channel=0):

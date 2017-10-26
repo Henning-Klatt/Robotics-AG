@@ -3,8 +3,7 @@ robot:
     baseSpeed: 75
     maxSpeed: 150
     
-    motorl: 1 # Port_C
-    motorr: 0 # Port_B
+    motorl: 0 # Port_C
+    motorr: 1 # Port_B
 
     sample: 0.01
-

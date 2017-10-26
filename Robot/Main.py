@@ -8,8 +8,8 @@ rob = Robot()
 def followline():
     """ Follow the line """
     rob.sensorbar()
-    rob.motor('l', rob.baseSpeed)
-    rob.motor('r', rob.baseSpeed)
+    #rob.motor('l', rob.baseSpeed)
+    #rob.motor('r', rob.baseSpeed)
 
     if rob.colors[3] == BLACK and rob.colors[4] == BLACK:
         rob.motor('l', rob.baseSpeed)
@@ -27,19 +27,17 @@ def followline():
     else:
         return
 
-    # if all(item[2] == BLACK for item in every):
-    #     pass
     if rob.colors[I] == BLACK:
-        rob.motor(back, rob.minSpeed)
+        rob.motor(back, -rob.minSpeed)
+        rob.motor(forw, rob.baseSpeed)
     if rob.colors[MI] == BLACK:
-        rob.motor(forw, rob.maxSpeed)
+        rob.motor(back, -rob.minSpeed)
+        rob.motor(forw, rob.baseSpeed)
     if rob.colors[OM] == BLACK:
-        rob.motor(back, 0)
+        pass
     if rob.colors[O] == BLACK:
-        print("Back")
-        rob.motor('l', -rob.baseSpeed, steps=360)
-        rob.motor('r', -rob.baseSpeed, steps=360)
-    
+        pass
+
 if __name__ == "__main__":
     try:
         while True:
@@ -48,8 +46,8 @@ if __name__ == "__main__":
             #debug.log()
 
     except KeyboardInterrupt:
-        rob.close()
         rob.motor('l', 0)
         rob.motor('r', 0)
+        rob.close()
         #debug.clear()
         print("Beende Hauptprogramm, um Debug zu beenden druecke Q")
