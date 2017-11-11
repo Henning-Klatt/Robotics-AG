@@ -2,8 +2,9 @@
 from Robot import *
 from debug import *
 from time import sleep
+import sys
 rob = Robot()
-#debug = Debug()
+debug = Debug()
 
 def followline():
     """ Follow the line """
@@ -28,26 +29,36 @@ def followline():
         return
 
     if rob.colors[I] == BLACK:
-        rob.motor(back, -rob.minSpeed)
-        rob.motor(forw, rob.baseSpeed)
+        rob.motor('r', rob.baseSpeed - 20)
     if rob.colors[MI] == BLACK:
-        rob.motor(back, -rob.minSpeed)
-        rob.motor(forw, rob.baseSpeed)
+        rob.motor('r', rob.baseSpeed - 40)
     if rob.colors[OM] == BLACK:
-        pass
+        rob.motor('r', rob.baseSpeed - 80)
     if rob.colors[O] == BLACK:
-        pass
+        rob.motor('r', rob.baseSpeed - 100)
 
 if __name__ == "__main__":
     try:
+        rob.motor('rl', 0) # Test brickpi.
         while True:
             followline()
+            debug.showValues(rob)
+            debug.log("test")
             sleep(rob.sample)
-            #debug.log()
+            debug.log("test")
 
-    except KeyboardInterrupt:
+    except Exception as e:
+        sleep(.1)
         rob.motor('l', 0)
         rob.motor('r', 0)
         rob.close()
-        #debug.clear()
-        print("Beende Hauptprogramm, um Debug zu beenden druecke Q")
+        debug.clear()
+        print(e)
+
+    finally:
+        sleep(.1)
+        rob.motor('l', 0)
+        rob.motor('r', 0)
+        rob.close()
+        debug.clear()
+        sys.exit(0)
