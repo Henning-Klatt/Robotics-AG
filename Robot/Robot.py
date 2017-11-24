@@ -32,6 +32,7 @@ class Robot(object):
         # Open SPI bus
         self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
+        self.spi.max_speed_hz = 5000
 
         # BrickPi
         self.brick = BrickPi(unsafe=unsafe)

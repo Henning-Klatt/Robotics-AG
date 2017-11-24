@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from Robot import *
-from debug import *
+from Debug import *
 from time import sleep
 import sys
 rob = Robot()
