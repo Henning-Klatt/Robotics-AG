@@ -1,55 +1,78 @@
-#/usr/bin/python
+#!/usr/bin/python3
+""" Everything needed to control the robot.  """
+from threading import Thread
+import yaml
 import spidev
 import os
-from Brick import *
-from threading import Thread
+from BrickPiM import BrickPi
+
+global BLACK
+global WHITE
+global GREEN
+
+GREEN = 2
+BLACK = 1
+WHITE = 0
 
 class Robot(object):
-	def __init__(self, speed, motorl, motorr, sample):
-		# Configuration
-		self.baseSpeed = speed
-		self.motorr = motorr
-		self.motorl = motorl
-		self.sample = sample # Delay used by motorRotateDegree
-		self.speedl = 0
-		self.speedr = 0
+    """ All methods needed to control the robot """
+    def __init__(self, unsafe=False):
+        # Load configuration file
+        with open("config.yml", 'r') as ymlfile: # Load Configuration into Dict
+                cfg = yaml.load(ymlfile)
+        for section in cfg['robot']:
+            setattr(self, section, cfg['robot'][section])
 
-		# Setup
-		#-------------------------------
-		# Open SPI bus
-		spi = spidev.SpiDev()
-		spi.open(0,0)
+        # Init vars for values
+        self.colors = [0]*8 # Contains color Values
+        self.colorsCalibrate = [150]*8 # Contains treshold, modified by Robot.Calibrate
 
-		BrickPiSetup()
-		BrickPi.MotorEnable[self.motorr] = 1
-		BrickPi.MotorEnable[self.motorl] = 1
-		BrickPiUpdateValues()
+        # Setup
+        #-------------------------------
+        # Open SPI bus
+        self.spi = spidev.SpiDev()
+        self.spi.open(0, 0)
+        self.spi.max_speed_hz = 5000
 
-		# Thread start
-		self.motorThread = Thread(target=self.motor_thread, args=())
-		self.motorThread.setDaemon(1)
-		self.motorThread.start()
-
-		
-	def ReadChannel(self):
-		""" Function to read SPI data from MCP3008 chip """
-		data = []
-		for i in range(7):
-			adc = spi.xfer2([1,(8+i)<<4,0])
-			data[i] = ((adc[1]&3) << 8) + adc[2]
-		return data
+        # BrickPi
+        self.brick = BrickPi(unsafe=unsafe)
 
 
-	def motor(self, motor, speed):
-		""" Set speed of a motor ('l' or 'r') while driving """
-		if (motor == 'l'):
-			self.speedl = speed
-		elif (motor == 'r'):
-			self.speedr = speed
+    def sensorbar(self, channel=0):
+        """ Update self.colors and return value of one specified sensor (not neccessary)."""
+        data = self._readChannel()
+        #If data is bigger than the threshold (==Black) put True (aka. 1) in the list
+        self.colors = [ int(v > t) for (v,t) in zip(data, self.colorsCalibrate) ]
+        return self.colors[channel]
 
 
-	def motor_thread(self):
-		while True:
-			BrickPi.MotorSpeed[self.motorl] = self.speedl
-			BrickPi.MotorSpeed[self.motorr] = self.speedr
-			BrickPiUpdateValues()
+    def motor(self, direct, speed, steps=-1, blocking=True):
+        if direct == 'l':
+            m = self.motorl
+        elif direct == 'r':
+            m = self.motorr
+        else:
+            m = self.motorr
+            self.motor('l', speed, steps, blocking=False)
+
+        if speed < 0:
+            self.brick.updateDirection(m, 0)
+        else:
+            self.brick.updateDirection(m, 1)
+
+        self.brick.updateSpeed(m, abs(int(speed)))
+
+        if steps != -1:
+            self.brick.moveSteps(m, steps, blocking)
+
+    def close(self):
+        self.spi.close()
+        self.brick.stop()
+
+    def _readChannel(self):
+        """ Function to read SPI data from MCP3008 chip """
+        data = [0]*8
+        for i in range(8):
+            adc = self.spi.xfer2([1, (8+i)<<4, 0])
+            data[i] = ((adc[1]&3) << 8) + adc[2]
+        return data 

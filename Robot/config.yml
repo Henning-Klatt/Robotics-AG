@@ -1,0 +1,9 @@
+robot:
+    minSpeed: 30
+    baseSpeed: 75
+    maxSpeed: 150
+    
+    motorl: 0 # Port_C
+    motorr: 1 # Port_B
+
+    sample: 0.01
