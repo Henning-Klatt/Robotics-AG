@@ -6,6 +6,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
 RGB = [7,15,16]
+#RGB = [12,13] #BrickPi
 for pin in RGB:
     GPIO.setup(pin,GPIO.OUT)
     GPIO.output(pin,1)
