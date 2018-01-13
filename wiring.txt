@@ -1,4 +1,4 @@
-Raspberry Pi		Arduino		MCP3008		TCS34725	Additional
+Raspberry Pi		Arduino		MCP3008		TCS34725(0x29)	Additional	Gyro (0x68)
 
 			D2				LED enable
 			D3				SCL
@@ -13,5 +13,5 @@ Raspberry Pi		Arduino		MCP3008		TCS34725	Additional
 			D12		MOSI
 			D13		CS
 			A0						Buttons 1-4
-			A4				SDA
-			A5				SCL
+			A4				SDA				SDA
+			A5				SCL				SCL
