@@ -1,4 +1,4 @@
-Raspberry Pi		Arduino		MCP3008		TCS34725
+Raspberry Pi		Arduino		MCP3008		TCS34725	Additional
 
 			D2				LED enable
 			D3				SCL
@@ -12,5 +12,6 @@ Raspberry Pi		Arduino		MCP3008		TCS34725
 			D11		MISO
 			D12		MOSI
 			D13		CS
+			A0						Buttons 1-4
 			A4				SDA
 			A5				SCL
