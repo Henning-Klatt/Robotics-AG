@@ -3,7 +3,7 @@ Raspberry Pi		Arduino		MCP3008		TCS34725	Additional
 			D2				LED enable
 			D3				SCL
 			D4				SDA
-			D5
+			D5						Buzzer
 			D6
 			D7
 			D8
