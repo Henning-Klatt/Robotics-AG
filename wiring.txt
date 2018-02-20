@@ -7,7 +7,7 @@ Raspberry Pi		Arduino		MCP3008		TCS34725(0x29)	Additional	Gyro (0x68)
 			D6
 			D7
 			D8
-			D9
+			D9						Servo 1+2
 			D10		SCK
 			D11		MISO
 			D12		MOSI
