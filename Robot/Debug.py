@@ -7,6 +7,8 @@ import led
 
 class Debug(object):
     def __init__(self):
+        # Log string
+        self.logString = []
         # Setup ncurses
         led.set("running")
         self.screen = curses.initscr()
@@ -42,11 +44,11 @@ class Debug(object):
     def showValues(self, rob):
         rob.sensorbar()
         y = 5
-        for color in reversed(rob.colors):
-            if color == 1:
-                self.sensorBox.addstr(3, y, str(color), curses.color_pair(1))
+        for light in rob.light:
+            if light == 1:
+                self.sensorBox.addstr(3, y, str(light), curses.color_pair(1))
             else:
-                self.sensorBox.addstr(3, y, str(color))
+                self.sensorBox.addstr(3, y, str(light))
             y = y+4
         self.valueBox.addstr(2, 20, str(rob.baseSpeed))
         self.sensorBox.refresh()
@@ -62,4 +64,9 @@ class Debug(object):
         curses.endwin()
 
     def log(self, toLog):
-        self.logBox.addstr(3, 3, str(toLog))
+        self.logString.append(toLog)
+        for i,item in enumerate(reversed(self.logString)):
+            if i > 15:
+                break
+            self.logBox.addstr(2 + i, 2, item)
+        self.logBox.refresh()
