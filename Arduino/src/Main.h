@@ -18,6 +18,10 @@
 #define MOSI 12
 #define CS 13
 
+// LED Stuff
+#define NUM_LEDS 8
+#define LED_PIN 6
+
 // Color sensor constants
 #define SensorAddressWrite 0x29 //
 #define SensorAddressRead 0x29 // 

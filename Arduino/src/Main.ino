@@ -5,12 +5,14 @@
 #include <Wire.h>
 #include <I2Cdev.h>
 #include <MPU6050.h>
+#include <FastLED.h>
 #include "Main.h"
 
 // Open Busses and construct sensor objects
 SoftwareWire i2c1(SDA1, SCL1);
 Adafruit_MCP3008 adc;
 MPU6050 accelgyro;
+CRGB leds[NUM_LEDS];
 
 // i2c communication buffers
 byte i2cWriteBuffer[0][10];
@@ -22,6 +24,9 @@ int16_t gyro[3] = {0, 0, 0};
 int16_t accel[3] = {0, 0, 0};
 byte light[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 byte button = 0;
+
+bool waitLed = false;
+int useLed = -1;
 
 // read the state of the button into global variable
 void readButton() {
@@ -66,12 +71,14 @@ void transmitColors() {
     Serial.print("]");
 }
 
+// Read ADC Values into array
 void readADC() {
     for (int i = 0; i < 8; i++) {
         light[i] = adc.readADC(i);
     }
 }
 
+// transmit ADC data
 void transmitADC() {
     Serial.print("['l'");
     for (int i = 0; i < 8; i++) {
@@ -81,10 +88,12 @@ void transmitADC() {
     Serial.print("]");
 }
 
+// read gyro values
 void readGyro() {
     accelgyro.getMotion6(&accel[0], &accel[1], &accel[2], &gyro[0], &gyro[1], &gyro[2]);
 }
 
+// transmit gyro values
 void transmitGyro() {
     Serial.print("['a'");
     for (int i = 0; i < 3; i++) {
@@ -99,31 +108,59 @@ void transmitGyro() {
     Serial.print("]");
 }
 
-void serialEvent() {
-    while (Serial.available()) {
-        char c = (char) Serial.read();
-        Serial.print(c);
-        switch (c) {
-            case 'l': // Light sensors
-                readADC();
-                transmitADC();
-                break;
-            case 'b': // Button
-                readButton();
-                transmitButton();
-                break;
-            case 'c': // Colors
-                readColors();
-                transmitColors();
-            case 'g':
-                readGyro();
-                transmitGyro();
+// parse serialEvent input
+void parse(char req) {
+    // Led action
+    if (waitLed && useLed == -1) { // use Led x
+        useLed = req - '0';
+        Serial.print(useLed);
+        return;
+    } else if (waitLed) {
+        switch (req) { // set color
+            case 'R': leds[useLed] = CRGB::Red; break;
+            case '0': leds[useLed] = CRGB::Black; break;
+            case 'Y': leds[useLed] = CRGB::Yellow; break;
+            case 'G': leds[useLed] = CRGB::Green; break;
+            case 'B': leds[useLed] = CRGB::Blue; break;
+            case 'P': leds[useLed] = CRGB::Purple; break;
         }
+        useLed = -1;
+        waitLed = false;
+        FastLED.show();
+        return;
+    }
+
+    switch (req) {
+        case 'l': // Light sensors
+            readADC();
+            transmitADC();
+            break;
+        case 'b': // Button
+            readButton();
+            transmitButton();
+            break;
+        case 'c': // Colors
+            readColors();
+            transmitColors();
+            break;
+        case 'g':
+            readGyro();
+            transmitGyro();
+            break;
+        case 'n':
+            waitLed = true;
     }
 }
 
 void setup() {
     Serial.begin(9600);
+
+    // Setup Neopixel
+    FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
+    for (int i = 0; i < 8; i++) {
+        leds[i] = CRGB::Black;
+    }
+    FastLED.show();
 
     // Setup I2C
     i2c0.begin();
@@ -138,6 +175,14 @@ void setup() {
 
     // Setup SPI
     adc.begin(SCK, MOSI, MISO, CS);
+}
+
+void serialEvent() {
+    while (Serial.available()) {
+        char c = (char) Serial.read();
+        Serial.print(c);
+        parse(c);
+    }
 }
 
 void loop() {
