@@ -3,14 +3,12 @@ from Robot import *
 import curses
 import threading
 import sys, os
-import led
 
 class Debug(object):
     def __init__(self):
         # Log string
         self.logString = []
         # Setup ncurses
-        led.set("running")
         self.screen = curses.initscr()
         curses.noecho()
         curses.curs_set(0)
@@ -43,8 +41,10 @@ class Debug(object):
 
     def showValues(self, rob):
         rob.sensorbar()
+        zw = rob.light
+        zw.reverse()
         y = 5
-        for light in rob.light:
+        for light in zw:
             if light == 1:
                 self.sensorBox.addstr(3, y, str(light), curses.color_pair(1))
             else:

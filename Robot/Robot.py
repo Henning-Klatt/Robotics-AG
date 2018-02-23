@@ -3,9 +3,12 @@
 import yaml
 import spidev
 import serial
+import os
 from time import sleep
 from struct import pack
 from BrickPiM import BrickPi
+import Arduino
+import ast
 
 global BLACK
 global WHITE
@@ -26,26 +29,21 @@ class Robot(object):
 
         # Init vars for values
         self.light = [0]*8 # Contains sensorbar values
-        self.colors = [[0]*4]*2
-        self.lightCalibrate = [600]*8 # Contains treshold, modified by Robot.Calibrate
+        self.colors = [0]*2
+        self.lightCalibrate = [50]*8 # Contains treshold, modified by Robot.Calibrate
 
         # Setup
         #-------------------------------
-        # Open Serial connection to arduino
-        # FIXME: Does this change? - No
-        self.serial = serial.Serial("/dev/serial/by-path/platform-3f980000.usb-usb-0:1.4:1.0-port0")
-        self.serial.baudrate = 9600
+        # Arduino
+        self.arduino = Arduino.arduino()
 
         # BrickPi
         self.brick = BrickPi(unsafe=self.unsafe)
-
+        sleep(5)
 
     def sensorbar(self, channel=0):
-        """ Update self.colors and return value of one specified sensor (not neccessary)."""
-        self.serial.flushInput()
-        self.serial.write(b'l')
-        sleep(self.hw_timeout) # FIXME: Nonblocking call to read_all()
-        data = self.serial.read_all().decode("utf-8").replace("['l'", "").replace("]", "")[1:].split(",")
+        """ Transform raw values to BLACK/WHITE """
+        data = self.arduino.sensorbar(channel)
         for index in range(8):
             if(int(data[index]) > 80):
                 self.light[index] = BLACK
@@ -54,22 +52,11 @@ class Robot(object):
         return self.light[channel]
 
     def colorSensors(self):
-        self.serial.flushInput()
-        self.serial.write(b'c')
-        sleep(self.hw_timeout) # FIXME: Nonblock
-        self.colors = self.serial.read_all()
-
-    # FIXME: This has to be called when the button is pressed. An interrupt should be used
-    #        Alternatively: do not flushInput() everytime
-    # XXX: Not tested. But it SHOULD work
-    def button(self):
-        """ Update currently activated button """
-        self.serial.flushInptu()
-        self.serial.write(b'b')
-        sleep(self.hw_timeout) # FIXME: Nonblocking call to read_all()
-        return (self.serial.read_all())
+        """ Transfomr raw values to BLACK/WHITE/GREEN """
+        data = self.arduino.colorSensors()
 
     def motor(self, direct, speed, steps=-1, blocking=True):
+        """ Control both motors at the same time """
         if direct == 'l':
             m = self.motorl
         elif direct == 'r':
@@ -90,4 +77,6 @@ class Robot(object):
 
 
     def close(self):
+        """ Stop all open connections """
         self.brick.stop()
+        self.arduino.close()
