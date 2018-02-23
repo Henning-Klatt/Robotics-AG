@@ -113,7 +113,6 @@ void parse(char req) {
     // Led action
     if (waitLed && useLed == -1) { // use Led x
         useLed = req - '0';
-        Serial.print(useLed);
         return;
     } else if (waitLed) {
         switch (req) { // set color
@@ -180,7 +179,6 @@ void setup() {
 void serialEvent() {
     while (Serial.available()) {
         char c = (char) Serial.read();
-        Serial.print(c);
         parse(c);
     }
 }
