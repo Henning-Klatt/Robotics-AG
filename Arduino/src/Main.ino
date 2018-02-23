@@ -152,7 +152,7 @@ void parse(char req) {
 }
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(250000);
 
     // Setup Neopixel
     FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
