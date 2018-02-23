@@ -13,6 +13,7 @@ class main(object):
             print("start")
             while True:
                 self.followline()
+                print(rob.light)
                 #debug.showValues(rob)
                 sleep(rob.sample)
     
@@ -31,18 +32,16 @@ class main(object):
     def followline(self):
         """ Follow the line """
         rob.sensorbar()
-        rob.colorSensors()
-    
         rob.motor('lr', rob.baseSpeed)
 
-        if (rob.colors[0] == BLACK and rob.colors[1] == BLACK):
+        if (rob.light[3] == BLACK and rob.light[4] == BLACK):
             rob.motor('rl', rob.baseSpeed)
-        elif (rob.colors[0] == BLACK):
+        elif (BLACK in rob.light[4:7]):
             print("r")
             rob.motor('r', -rob.baseSpeed * 1.5)
             rob.motor('l', rob.baseSpeed * 1.5)
             sleep(.1)
-        elif (rob.colors[1] == BLACK):
+        elif (BLACK in rob.light[0:3]):
             print("l")
             rob.motor('l', -rob.baseSpeed * 1.5)
             rob.motor('r', rob.baseSpeed * 1.5)

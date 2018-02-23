@@ -30,7 +30,7 @@ class Robot(object):
         # Init vars for values
         self.light = [0]*8 # Contains sensorbar values
         self.colors = [0]*2
-        self.lightCalibrate = [50]*8 # Contains treshold, modified by Robot.Calibrate
+        self.lightCalibrate = [150]*8 # Contains treshold, modified by Robot.Calibrate
 
         # Setup
         #-------------------------------

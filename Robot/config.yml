@@ -1,6 +1,6 @@
 robot:
     minSpeed: 50
-    baseSpeed: 33
+    baseSpeed: 50
     maxSpeed: 150
     
     motorl: 0 # Port_C

@@ -1,5 +1,7 @@
 import serial
 import os
+from struct import pack
+import ast
 
 class arduino(object):
     def __init__(self):
@@ -10,9 +12,8 @@ class arduino(object):
     def neopixel(self, led, color):
         """ Update color of led """
         self.serial.write(b'n')
-        sleep(self.hw_timeout)
         self.serial.write(pack("!B", led))
-        self.serial.write(color)
+        self.serial.write(bytes(color, 'utf-8'))
 
     def sensorbar(self, channel=0):
         """ Update self.colors and return value of one specified sensor (not neccessary)."""
@@ -62,5 +63,5 @@ class arduino(object):
         data = ast.literal_eval(data)[1:]
         return data
 
-    def stop():
-        self.serial.stop()
+    def close(self):
+        self.serial.close()

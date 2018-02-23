@@ -5,7 +5,7 @@ import sys
 print ("TESTING ARDUINO:\n----------------------------------------")
 print("INIT ARDUINO:")
 try:
-    a = Arduino()
+    a = Arduino.arduino()
 except Exception as e:
     print("Initializing Arduino failed. Error: ")
     print(e)
