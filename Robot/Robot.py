@@ -54,6 +54,13 @@ class Robot(object):
     def colorSensors(self):
         """ Transfomr raw values to BLACK/WHITE/GREEN """
         data = self.arduino.colorSensors()
+        for i in range(2):
+            if all( [ x > 4000 for x in data[i]]):
+                self.colors[i] = WHITE
+            elif data[i][1] > 800 and data[i][0] < 1000 and data[i][2] < 1000:
+                self.colors[i] = GREEN
+            else:
+                self.colors[i] = BLACK
 
     def motor(self, direct, speed, steps=-1, blocking=True):
         """ Control both motors at the same time """

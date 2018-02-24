@@ -47,26 +47,12 @@ class main(object):
         else:
             rob.motor('lr', rob.baseSpeed)
             return
-        #elif (BLACK in rob.light[4:7]):
-        #    print("r")
-        #    rob.motor('r', -rob.baseSpeed * 1.5)
-        #    rob.motor('l', rob.baseSpeed * 1.5)
-        #    sleep(.1)
-        #elif (BLACK in rob.light[0:3]):
-        #    print("l")
-        #    rob.motor('l', -rob.baseSpeed * 1.5)
-        #    rob.motor('r', rob.baseSpeed * 1.5)
-        #if all([ rob.light[x] for x in every]) :
-        #    print("90")
-        #    rob.motor(forw, rob.baseSpeed, 90, blocking=False)
-        #    rob.motor(back, -rob.baseSpeed, 180)
-        #    return
         if O == BLACK:
-            rob.motor(back, -rob.baseSpeed, 50, blocking=False)
-            rob.motor(forw, rob.baseSpeed, 50)
+            rob.motor(back, -rob.baseSpeed, 180, blocking=False)
+            rob.motor(forw, rob.baseSpeed, 180)
             print("0")
             return
-        rob.motor(back, -rob.baseSpeed)
+        rob.motor(back, -rob.baseSpeed * 0.5)
         rob.motor(forw, rob.baseSpeed)
 
 if __name__ == "__main__":

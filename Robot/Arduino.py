@@ -40,10 +40,10 @@ class arduino(object):
             if char == '[':
                 parens += 1
             elif char == ']':
-                if parens == 0:
+                parens -= 1
+                if parens <= 0:
                     break
-                else:
-                    parens -= 1
+        print("parse")
         data = ast.literal_eval(data)[1:]
         return data
 
