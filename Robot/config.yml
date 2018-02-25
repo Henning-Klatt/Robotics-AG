@@ -1,11 +1,10 @@
 robot:
-    minSpeed: 30
-    baseSpeed: 75
+    minSpeed: 50
+    baseSpeed: 100
     maxSpeed: 150
     
-    motorl: 1 # Port_C
-    motorr: 0 # Port_B
+    motorl: 0 # Port_C
+    motorr: 1 # Port_B
 
-    sample: 0.1
-    hw_timeout: 0.1
+    sample: 0
     unsafe: True
